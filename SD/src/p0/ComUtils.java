@@ -1,3 +1,5 @@
+package p0;
+
 import java.net.*;
 import java.io.*;
 import java.util.Locale;
@@ -15,6 +17,13 @@ public class ComUtils
     dis = new DataInputStream(socket.getInputStream());
     dos = new DataOutputStream(socket.getOutputStream());
   }
+  
+  public ComUtils(File file) throws IOException{
+    dis = new DataInputStream(new FileInputStream(file));
+    dos = new DataOutputStream(new FileOutputStream(file));
+  }
+  
+  
 
     /* Llegir un enter de 32 bits */
   public int read_int32() throws IOException
@@ -49,6 +58,17 @@ public class ComUtils
     str = String.valueOf(cStr);
 
     return str.trim(); 
+  }
+  
+  public void writeChar(char a) throws IOException
+  {
+    int numBytes, lenStr = 1; 
+    byte bStr = (byte) a;
+    dos.write(bStr);
+  }
+  public char readChar() throws IOException
+  {
+    return dis.readChar();
   }
 
   /* Escriure un string */
@@ -121,26 +141,26 @@ public class ComUtils
   }
 	
 	/* Llegir un string  mida variable size = nombre de bytes especifica la longitud*/
-	public  String read_string_variable(int size) throws IOException
+    public  String read_string_variable(int size) throws IOException
 	{
-		byte bHeader[]=new byte[size];
-		char cHeader[]=new char[size];
-		int numBytes=0;
-		
-		// Llegim els bytes que indiquen la mida de l'string
-		bHeader = read_bytes(size);
-		// La mida de l'string ve en format text, per tant creem un string i el parsejem
-		for(int i=0;i<size;i++){
-			cHeader[i]=(char)bHeader[i]; }
-		numBytes=Integer.parseInt(new String(cHeader));
-		
-		// Llegim l'string
-		byte bStr[]=new byte[numBytes];
-		char cStr[]=new char[numBytes];
-		bStr = read_bytes(numBytes);
-		for(int i=0;i<numBytes;i++)
-			cStr[i]=(char)bStr[i];
-		return String.valueOf(cStr);
+            byte bHeader[]=new byte[size];
+            char cHeader[]=new char[size];
+            int numBytes=0;
+
+            // Llegim els bytes que indiquen la mida de l'string
+            bHeader = read_bytes(size);
+            // La mida de l'string ve en format text, per tant creem un string i el parsejem
+            for(int i=0;i<size;i++){
+                    cHeader[i]=(char)bHeader[i]; }
+            numBytes=Integer.parseInt(new String(cHeader));
+
+            // Llegim l'string
+            byte bStr[]=new byte[numBytes];
+            char cStr[]=new char[numBytes];
+            bStr = read_bytes(numBytes);
+            for(int i=0;i<numBytes;i++)
+                    cStr[i]=(char)bStr[i];
+            return String.valueOf(cStr);
 	}
 	
 	/* Escriure un string mida variable, size = nombre de bytes especifica la longitud  */
@@ -148,25 +168,45 @@ public class ComUtils
 	public  void write_string_variable(int size,String str) throws IOException
 	{
 		
-		// Creem una seqüència amb la mida
-		byte bHeader[]=new byte[size];
-		String strHeader;
-		int numBytes=0; 
-		
-		// Creem la capçalera amb el nombre de bytes que codifiquen la mida
-		numBytes=str.length();
-		
-		strHeader=String.valueOf(numBytes);
+            // Creem una seqüència amb la mida
+            byte bHeader[]=new byte[size];
+            String strHeader;
+            int numBytes=0; 
+
+            // Creem la capçalera amb el nombre de bytes que codifiquen la mida
+            numBytes=str.length();
+
+            strHeader=String.valueOf(numBytes);
 	    int len;
-		if ((len=strHeader.length()) < size)
-	    	for (int i =len; i< size;i++){
-	    		strHeader= "0"+strHeader;}
-		for(int i=0;i<size;i++)
-			bHeader[i]=(byte)strHeader.charAt(i);
-		// Enviem la capçalera
-		dos.write(bHeader, 0, size);
-		// Enviem l'string writeBytes de DataOutputStrem no envia el byte més alt dels chars.
-		dos.writeBytes(str);
+            if ((len=strHeader.length()) < size)
+            for (int i =len; i< size;i++){
+                    strHeader= "0"+strHeader;}
+            for(int i=0;i<size;i++)
+                    bHeader[i]=(byte)strHeader.charAt(i);
+            // Enviem la capçalera
+            dos.write(bHeader, 0, size);
+            // Enviem l'string writeBytes de DataOutputStrem no envia el byte més alt dels chars.
+            dos.writeBytes(str);
 	}
+
+    void writeTest() {
+        try {
+            write_string("Hola\nAixo es un fitxer de prova...");
+        } catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    String readTest() {
+        String res = "";
+        try{
+            res=read_string();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
 }
+
 
