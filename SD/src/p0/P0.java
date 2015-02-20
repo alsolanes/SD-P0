@@ -22,7 +22,8 @@ public class P0 {
         System.out.println("Introdueix la opcio:\n\t1.-Read String\n"
           + "\t2.-Read Char\n"
           + "\t3.-Read String mida fixa\n"
-          + "\t4.-Write All in One"
+          + "\t4.-Write All in One\n"
+          + "\t5.-Read All in One\n"
           + "Per sortir premer -1");
         Scanner sc;
         sc = new Scanner(System.in);
@@ -35,7 +36,7 @@ public class P0 {
                     try {
                         file.createNewFile();
                         ComUtils cmUtils = new ComUtils(file);
-                        cmUtils.writeTest();
+                        cmUtils.writeTest("hola, test 1 en marxa!");
                         System.out.println(cmUtils.readTest());
                       }
                       catch(IOException e)
@@ -49,8 +50,8 @@ public class P0 {
                     try {
                         file2.createNewFile();
                         ComUtils cmUtils = new ComUtils(file2);
-                        cmUtils.writeChar('a');
-                        System.out.println(cmUtils.readChar());
+                        cmUtils.write_char('a');
+                        System.out.println(cmUtils.read_char());
                       }
                       catch(IOException e)
                       {
@@ -77,10 +78,15 @@ public class P0 {
                     try{
                         file4.createNewFile();
                         ComUtils cmUtils = new ComUtils(file4);
-                        cmUtils.writeChar('Q');
+                        cmUtils.write_char('Q');
                         cmUtils.write_int32(10);
                         cmUtils.write_string("Numero");
                         cmUtils.write_string_variable(10, "hola, com va?");
+                        
+                        System.out.println(cmUtils.read_char());
+                        System.out.println(cmUtils.read_int32());
+                        System.out.println(cmUtils.read_string());
+                        System.out.println(cmUtils.read_string_variable(10));
                     }catch(IOException e){
                         System.out.println("Error Found during Operation:" + e.getMessage());
                         e.printStackTrace();
@@ -91,7 +97,7 @@ public class P0 {
                     try{
                         file5.createNewFile();
                         ComUtils cmUtils = new ComUtils(file5);
-                        cmUtils.readChar();
+                        cmUtils.read_char();
                         cmUtils.read_int32();
                         cmUtils.read_string();
                         cmUtils.read_string_variable(10);

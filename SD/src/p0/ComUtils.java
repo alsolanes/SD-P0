@@ -59,16 +59,17 @@ public class ComUtils
 
     return str.trim(); 
   }
-  
-  public void writeChar(char a) throws IOException
+  public void write_char(int num) throws IOException 
   {
-    int numBytes, lenStr = 1; 
-    byte bStr = (byte) a;
-    dos.write(bStr);
+    dos.writeByte(Character.forDigit(num, 10));
   }
-  public char readChar() throws IOException
+  public void write_char(char a) throws IOException
   {
-    return dis.readChar();
+    dos.writeByte((byte) a);
+  }
+  public char read_char() throws IOException
+  {
+    return (char) dis.readByte();
   }
 
   /* Escriure un string */
@@ -189,9 +190,9 @@ public class ComUtils
             dos.writeBytes(str);
 	}
 
-    void writeTest() {
+    void writeTest(String text) {
         try {
-            write_string("Hola\nAixo es un fitxer de prova...");
+            write_string(text);
         } catch(Exception ex){
             ex.printStackTrace();
         }
